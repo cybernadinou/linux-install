@@ -9,7 +9,7 @@ source ./functions/global_variable.sh
 source  ./functions/global_function.sh
 
 function init {
-    local rm -opt./in
+    local opt
     while :
     do
         #clear
@@ -25,10 +25,9 @@ function init {
                 break;;
             3)  echo "Bye $USER";
                 exit 1;;
-            *)  echo $default_value_while ;
+            *)  default_case_while ;
         esac
     done
 }
 
-isRoot
 init
