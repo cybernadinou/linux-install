@@ -61,3 +61,9 @@ function ping_access {
   fi
   return $rst;
 }
+
+function default_case_while {
+    echo "Sorry, your choice is not available'"
+    read -p "Please try again : [Enter key]"
+    clear
+}
