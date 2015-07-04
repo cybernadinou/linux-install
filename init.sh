@@ -29,5 +29,6 @@ function init {
         esac
     done
 }
-
-init
+if isRoot ; then
+    init
+fi
