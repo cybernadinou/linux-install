@@ -59,20 +59,24 @@ tar -zxvf PhpStorm-8.0.3.tar.gz
 #           REGLES IPTABLES                 #
 ######################################################
  
+# 
 # Reset rules
 iptables -t filter -F
 iptables -t filter -X
-  
+
 # Deny all
 iptables -t filter -P INPUT DROP
 iptables -t filter -P FORWARD DROP
 iptables -t filter -P OUTPUT DROP
   
-# Allow established and localhost connection
+# Allow established sessions to receive traffic
+## Old Versions
 iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+## New version
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
-# Loopback
+# Accept all localhost connection
 iptables -t filter -A INPUT -i lo -j ACCEPT
 iptables -t filter -A OUTPUT -o lo -j ACCEPT
   
@@ -101,6 +105,14 @@ iptables -A FORWARD -p icmp --icmp-type echo-request -m limit --limit 1/second -
 
 # Limit nmap (scan port)
 iptables -A FORWARD -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/s -j ACCEPT
+
+# Allow github SSH access
+iptables -A OUTPUT -p tcp -d github.com --dport 22 -j ACCEPT
+iptables -A INPUT -p tcp -d github.com --dport 22 -j ACCEPT
+
+#Allow githlab SSH Access
+iptables -A OUTPUT -p tcp -d gitlab.com --dport 22 -j ACCEPT
+iptables -A INPUT -p tcp -d gitlab.com --dport 22 -j ACCEPT
 
 iptables-save > /etc/iptables_rules
 
